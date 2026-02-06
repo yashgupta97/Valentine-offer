@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #e91e63;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .heart {
+            font-size: 4em;
+            margin: 20px 0;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+        }
+
+        .question {
+            font-size: 1.5em;
+            color: #333;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            position: relative;
+            min-height: 200px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .no-btn {
+            background: #ddd;
+            color: #666;
+            position: relative;
+            transition: all 0.1s ease-out;
+        }
+
+        .celebration {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .celebration h2 {
+            color: #e91e63;
+            font-size: 2.5em;
+            margin: 20px 0;
+        }
+
+        .celebration .confetti {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating {
+            animation: float 3s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="question-section">
+            <h1>Happy Valentine's Day! 💕</h1>
+            <div class="heart">❤️</div>
+            <p class="question">Will you be my Valentine?</p>
+            <div class="buttons">
+                <button class="yes-btn" onclick="sayYes()">YES! 💖</button>
+                <button class="no-btn" id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+            </div>
+        </div>
+
+        <div id="celebration-section" class="celebration hidden">
+            <div class="confetti">🎉 🎊 ✨</div>
+            <h2>That's a great catch!</h2>
+            <div class="heart floating">💖</div>
+            <p style="font-size: 1.3em; color: #666; margin-top: 20px;">I'm so happy! Can't wait to celebrate with you! 💕</p>
+            <div class="confetti" style="margin-top: 20px;">🌹 💐 🌸</div>
+        </div>
+    </div>
+
+    <script>
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.querySelector('.yes-btn');
+            const container = document.querySelector('.buttons');
+            
+            let randomX, randomY;
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            // Keep trying until we find a position that doesn't overlap with YES button
+            do {
+                // Get random position within a reasonable range
+                const maxX = 250;
+                const maxY = 150;
+                
+                randomX = Math.random() * maxX - maxX/2;
+                randomY = Math.random() * maxY - maxY/2;
+                
+                attempts++;
+            } while (Math.abs(randomX) < 120 && Math.abs(randomY) < 50 && attempts < maxAttempts);
+            
+            // Ensure it moves far enough away from the YES button
+            if (Math.abs(randomX) < 120) {
+                randomX = randomX > 0 ? 150 : -150;
+            }
+            
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        function sayYes() {
+            document.getElementById('question-section').classList.add('hidden');
+            document.getElementById('celebration-section').classList.remove('hidden');
+            document.getElementById('celebration-section').style.display = 'block';
+            
+            // Create falling hearts effect
+            createHearts();
+        }
+
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '-50px';
+                    heart.style.fontSize = Math.random() * 30 + 20 + 'px';
+                    heart.style.opacity = '0.8';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.animation = `fall ${Math.random() * 3 + 3}s linear`;
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 6000);
+                }, i * 100);
+            }
+        }
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fall {
+                to {
+                    top: 100vh;
+                    transform: rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
