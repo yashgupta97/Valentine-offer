@@ -18,7 +18,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding: 20px;
         }
 
         .container {
@@ -29,6 +30,8 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 500px;
             width: 90%;
+            position: relative;
+            overflow: visible;
         }
 
         h1 {
@@ -162,26 +165,33 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.querySelector('.yes-btn');
             const container = document.querySelector('.buttons');
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
             
             let randomX, randomY;
             let attempts = 0;
             const maxAttempts = 10;
             
+            // Calculate safe movement range based on screen size
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const containerWidth = containerRect.width;
+            
+            // Limit movement to stay within container bounds
+            const maxX = Math.min(150, (containerWidth / 2) - 80);
+            const maxY = 80;
+            
             // Keep trying until we find a position that doesn't overlap with YES button
             do {
-                // Get random position within a reasonable range
-                const maxX = 250;
-                const maxY = 150;
-                
-                randomX = Math.random() * maxX - maxX/2;
-                randomY = Math.random() * maxY - maxY/2;
+                randomX = (Math.random() * 2 - 1) * maxX;
+                randomY = (Math.random() * 2 - 1) * maxY;
                 
                 attempts++;
-            } while (Math.abs(randomX) < 120 && Math.abs(randomY) < 50 && attempts < maxAttempts);
+            } while (Math.abs(randomX) < 100 && Math.abs(randomY) < 40 && attempts < maxAttempts);
             
             // Ensure it moves far enough away from the YES button
-            if (Math.abs(randomX) < 120) {
-                randomX = randomX > 0 ? 150 : -150;
+            if (Math.abs(randomX) < 100) {
+                randomX = randomX > 0 ? maxX : -maxX;
             }
             
             noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
